@@ -28,12 +28,13 @@ angular.module('starter.controllers', [])
 })
 .controller('TestController', function($scope) {
   $scope.data = {};
-  $scope.cooper_calc = function() {
+  $scope.calculateCooper = function() {
     var person = new Person({
       gender: $scope.data.gender,
-      age: $scope.data.age
+      age: $scope.data.age,
+      distance: $scope.data.distance
     });
-    person.cooper_result($scope.data.distance);
+    person.cooper_result($scope.data);
     $scope.person = person;
     console.log($scope.person);
   };
