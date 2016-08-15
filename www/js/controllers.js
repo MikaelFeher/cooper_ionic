@@ -44,14 +44,21 @@ angular.module('starter.controllers', [])
   };
 
 })
-.controller('SignupController', function($scope, $auth) {
+.controller('SignupController', function($scope, $auth, $ionicLoading) {
+
+  $scope.registrationForm = {};
+
   $scope.handleRegBtnClick = function() {
+    $ionicLoading.show({
+     template: 'Signing up...'
+    });
     $auth.submitRegistration($scope.registrationForm)
       .then(function(resp) {
-        // handle success response
+        $ionicLoading.hide();
+        console.log('Success');
       })
       .catch(function(resp) {
-        // handle error response
+        $ionicLoading.hide();
       });
   };
 })
@@ -96,7 +103,7 @@ angular.module('starter.controllers', [])
     });
     performaceData.save(data, function(response){
       $ionicLoading.hide();
-      $scope.showAlert('Sucess', response.message);
+      $scope.showAlert('Success', response.message);
     }, function(error){
       $ionicLoading.hide();
       $scope.showAlert('Failure', error.statusText);
