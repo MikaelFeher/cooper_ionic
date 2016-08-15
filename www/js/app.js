@@ -1,4 +1,4 @@
-angular.module('starter', ['ionic', 'starter.controllers', 'ng-token-auth'])
+angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'ng-token-auth', 'ngResource'])
   .constant('API_URL', 'https://ca-cooper-api.herokuapp.com/api/v1')
 
 .config(function ($authProvider, API_URL) {
@@ -56,6 +56,18 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ng-token-auth'])
        controller: 'TestController'
      }
    }
+  })
+  .state('app.data', {
+    url: '/data',
+    params: {
+      savedDataCollection: {}
+    },
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/test/data.html',
+        controller: 'DataCtrl'
+      }
+    }
   });
 
   // if none of the above states are matched, use this as the fallback
