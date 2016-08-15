@@ -8,7 +8,7 @@ angular.module('starter.controllers', [])
                                  $ionicLoading) {
 
   $rootScope.$on('auth:login-success', function(ev, user) {
-    $scope.currentUser = user;
+    $scope.currentUser = angular.extend(user, $auth.retrieveData('auth_headers'));
   });
 
   $scope.loginData = {};
@@ -44,21 +44,14 @@ angular.module('starter.controllers', [])
   };
 
 })
-.controller('SignupController', function($scope, $auth, $ionicLoading) {
+.controller('SignupController', function($scope, $auth) {
   $scope.handleRegBtnClick = function() {
-    $scope.registrationForm = {};
-    $ionicLoading.show({
-     template: 'Signing up...'
-    });
     $auth.submitRegistration($scope.registrationForm)
       .then(function(resp) {
         // handle success response
-        $ionicLoading.hide();
       })
       .catch(function(resp) {
         // handle error response
-        $ionicLoading.hide();
-        $scope.errorMessage = error;
       });
   };
 })
@@ -85,5 +78,50 @@ angular.module('starter.controllers', [])
     person.cooper_result($scope.data);
     $scope.person = person;
     console.log($scope.person);
+  };
+})
+
+.controller('DataCtrl', function($scope, $stateParams){
+  $scope.$on('$ionicView.enter', function () {
+    $scope.savedDataCollection = $stateParams.savedDataCollection;
+  });
+})
+
+.controller('PerformanceCtrl', function($scope, performaceData, $ionicLoading, $ionicPopup){
+
+  $scope.saveData = function(person){
+    var data = {performace_data: {data: {message: person.message}}};
+    $ionicLoading.show({
+      template: 'Saving...'
+    });
+    performaceData.save(data, function(response){
+      $ionicLoading.hide();
+      $scope.showAlert('Sucess', response.message);
+    }, function(error){
+      $ionicLoading.hide();
+      $scope.showAlert('Failure', error.statusText);
+    });
+  };
+  $scope.retrieveData = function(){
+    $ionicLoading.show({
+        template: 'Retrieving data...'
+    });
+    performaceData.query({}, function(response){
+      $state.go('app.data', {savedDataCollection: response.entries});
+      $ionicLoading.hide();
+    }, function(error){
+      $ionicLoading.hide();
+      $scope.showAlert('Failure', error.statusText);
+    });
+  };
+
+  $scope.showAlert = function(message, content) {
+    var alertPopup = $ionicPopup.alert({
+      title: message,
+      template: content
+    });
+    alertPopup.then(function(res) {
+    // Place some action here if needed...
+    });
   };
 });
