@@ -1,4 +1,11 @@
-angular.module('starter', ['ionic', 'starter.controllers'])
+angular.module('starter', ['ionic', 'starter.controllers', 'ng-token-auth'])
+  .constant('API_URL', 'https://ca-cooper-api.herokuapp.com/api/v1')
+
+.config(function ($authProvider, API_URL) {
+   $authProvider.configure({
+     apiUrl: API_URL
+   });
+ })
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -32,6 +39,15 @@ angular.module('starter', ['ionic', 'starter.controllers'])
       }
     }
   })
+  .state('app.registration', {
+    url: '/registration',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/registration/registration.html',
+        controller: 'SignupController'
+      }
+    }
+  })
   .state('app.test', {
    url: '/test',
    views: {
@@ -40,7 +56,7 @@ angular.module('starter', ['ionic', 'starter.controllers'])
        controller: 'TestController'
      }
    }
- });
+  });
 
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/app/about');
