@@ -1,6 +1,15 @@
 angular.module('starter.controllers', [])
 
-.controller('AppCtrl', function($scope, $ionicModal, $timeout) {
+.controller('AppCtrl', function ($rootScope,
+                                 $scope,
+                                 $ionicModal,
+                                 $timeout,
+                                 $auth,
+                                 $ionicLoading) {
+
+  $rootScope.$on('auth:login-success', function(ev, user) {
+    $scope.currentUser = user;
+  });
 
   $scope.loginData = {};
 
@@ -17,16 +26,48 @@ angular.module('starter.controllers', [])
   $scope.login = function() {
     $scope.modal.show();
   };
-
-  $scope.doLogin = function() {
-    console.log('Doing login', $scope.loginData);
-
-    $timeout(function() {
+  $scope.doLogin = function () {
+    $ionicLoading.show({
+     template: 'Logging in...'
+    });
+    $auth.submitLogin($scope.loginData)
+    .then(function (resp) {
+      // handle success response
+      $ionicLoading.hide();
       $scope.closeLogin();
-    }, 1000);
+    })
+    .catch(function (error) {
+      // handle error response
+      $ionicLoading.hide();
+      $scope.errorMessage = error;
+    });
+  };
+
+})
+.controller('SignupController', function($scope, $auth) {
+  $scope.handleRegBtnClick = function() {
+    $auth.submitRegistration($scope.registrationForm)
+      .then(function(resp) {
+        // handle success response
+      })
+      .catch(function(resp) {
+        // handle error response
+      });
   };
 })
+
 .controller('TestController', function($scope) {
+  $scope.gender = ['Male', 'Female'];
+  $scope.ageValues = {
+   min: 13,
+   max: 60,
+   value: 20
+  };
+  $scope.distanceValues = {
+    min: 1000,
+    max: 3500,
+    value: 1000
+  };
   $scope.data = {};
   $scope.calculateCooper = function() {
     var person = new Person({
