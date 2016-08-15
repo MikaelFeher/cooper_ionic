@@ -1,5 +1,5 @@
 angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'ng-token-auth', 'ngResource'])
-  .constant('API_URL', 'https://ca-cooper-api.herokuapp.com/api/v1')
+  .constant('API_URL', 'http://localhost:3000')
 
 .config(function ($authProvider, API_URL) {
    $authProvider.configure({
