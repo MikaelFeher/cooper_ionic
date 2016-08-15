@@ -44,14 +44,21 @@ angular.module('starter.controllers', [])
   };
 
 })
-.controller('SignupController', function($scope, $auth) {
+.controller('SignupController', function($scope, $auth, $ionicLoading) {
   $scope.handleRegBtnClick = function() {
+    $scope.registrationForm = {};
+    $ionicLoading.show({
+     template: 'Signing up...'
+    });
     $auth.submitRegistration($scope.registrationForm)
       .then(function(resp) {
         // handle success response
+        $ionicLoading.hide();
       })
       .catch(function(resp) {
         // handle error response
+        $ionicLoading.hide();
+        $scope.errorMessage = error;
       });
   };
 })
